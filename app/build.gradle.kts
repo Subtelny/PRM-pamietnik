@@ -19,6 +19,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -68,16 +69,23 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation("androidx.room:room-runtime:2.7.1")
-    annotationProcessor("androidx.room:room-compiler:2.7.1")
-    ksp("androidx.room:room-compiler:2.7.1")
-    implementation("androidx.room:room-ktx:2.7.1")
-    implementation("androidx.room:room-common:2.6.1")
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     implementation(platform(libs.firebase.bom))
-    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.android.gms:play-services-location:21.3.0")
-    implementation(libs.accompanist.permissions)
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.maps.android:maps-compose:2.14.0")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+
+    implementation("com.google.accompanist:accompanist-permissions:0.31.5-beta")
+
+    implementation("androidx.media3:media3-exoplayer:1.6.0")
+    implementation("androidx.media3:media3-ui:1.6.0")
+    implementation("androidx.media3:media3-common-ktx:1.6.0")
+
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }

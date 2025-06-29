@@ -36,7 +36,7 @@ class LockScreenViewModel(application: Application) : AndroidViewModel(applicati
                 it.copy(
                     isPasswordSet = isSet,
                     isLoading = false,
-                    needsToSetPasswordFirst = !isSet // Jeśli nie ma hasła, trzeba je ustawić
+                    needsToSetPasswordFirst = !isSet
                 )
             }
         }

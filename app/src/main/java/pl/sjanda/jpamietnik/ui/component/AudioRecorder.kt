@@ -1,4 +1,4 @@
-package pl.sjanda.jpamietnik.ui.screens
+package pl.sjanda.jpamietnik.ui.component
 
 import android.media.MediaRecorder
 import android.net.Uri
@@ -36,12 +36,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import kotlinx.coroutines.delay
+import pl.sjanda.jpamietnik.R
 import java.io.File
 import java.io.IOException
 
@@ -60,7 +62,6 @@ fun AudioRecorder(
     var outputFile by remember { mutableStateOf<File?>(null) }
     var hasRecording by remember { mutableStateOf(false) }
 
-    // Timer dla czasu nagrywania
     LaunchedEffect(isRecording, isPaused) {
         if (isRecording && !isPaused) {
             while (isRecording && !isPaused) {
@@ -87,12 +88,7 @@ fun AudioRecorder(
     fun startRecording() {
         try {
             outputFile = createOutputFile()
-            mediaRecorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                MediaRecorder(context)
-            } else {
-                @Suppress("DEPRECATION")
-                MediaRecorder()
-            }
+            mediaRecorder = MediaRecorder(context)
 
             mediaRecorder?.apply {
                 setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -108,22 +104,17 @@ fun AudioRecorder(
             recordingTime = 0L
         } catch (e: IOException) {
             e.printStackTrace()
-            // Obsługa błędu nagrywania
         }
     }
 
     fun pauseRecording() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mediaRecorder?.pause()
-            isPaused = true
-        }
+        mediaRecorder?.pause()
+        isPaused = true
     }
 
     fun resumeRecording() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mediaRecorder?.resume()
-            isPaused = false
-        }
+        mediaRecorder?.resume()
+        isPaused = false
     }
 
     fun stopRecording() {
@@ -138,7 +129,6 @@ fun AudioRecorder(
             hasRecording = true
         } catch (e: RuntimeException) {
             e.printStackTrace()
-            // Obsługa błędu zatrzymywania nagrywania
         }
     }
 
@@ -170,7 +160,6 @@ fun AudioRecorder(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (!permissionState.status.isGranted) {
-                // Prośba o uprawnienia
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -182,7 +171,7 @@ fun AudioRecorder(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Wymagane uprawnienie do mikrofonu",
+                        text = stringResource(R.string.audio_recorder_permission_needed),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -190,11 +179,10 @@ fun AudioRecorder(
                     Button(
                         onClick = { permissionState.launchPermissionRequest() }
                     ) {
-                        Text("Udziel uprawnienia")
+                        Text(stringResource(R.string.audio_recorder_give_permission))
                     }
                 }
             } else {
-                // Interfejs nagrywania
                 Text(
                     text = formatTime(recordingTime),
                     style = MaterialTheme.typography.headlineMedium,
@@ -208,7 +196,6 @@ fun AudioRecorder(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (!isRecording && !hasRecording) {
-                        // Przycisk rozpoczęcia nagrywania
                         FilledIconButton(
                             onClick = { startRecording() },
                             modifier = Modifier.size(64.dp),
@@ -218,7 +205,7 @@ fun AudioRecorder(
                         ) {
                             Icon(
                                 Icons.Default.Mic,
-                                contentDescription = "Rozpocznij nagrywanie",
+                                contentDescription = stringResource(R.string.audio_recorder_start_recording),
                                 modifier = Modifier.size(32.dp),
                                 tint = Color.White
                             )
@@ -226,21 +213,18 @@ fun AudioRecorder(
                     }
 
                     if (isRecording) {
-                        // Przycisk pauzy/wznowienia (tylko dla Android N+)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            IconButton(
-                                onClick = {
-                                    if (isPaused) resumeRecording() else pauseRecording()
-                                }
-                            ) {
-                                Icon(
-                                    if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
-                                    contentDescription = if (isPaused) "Wznów" else "Pauzuj"
-                                )
+                        IconButton(
+                            onClick = {
+                                if (isPaused) resumeRecording() else pauseRecording()
                             }
+                        ) {
+                            Icon(
+                                if (isPaused) Icons.Default.PlayArrow else Icons.Default.Pause,
+                                contentDescription = if (isPaused) stringResource(R.string.resume) else stringResource(
+                                    R.string.pause
+                                )
+                            )
                         }
-
-                        // Przycisk zatrzymania
                         FilledIconButton(
                             onClick = { stopRecording() },
                             colors = IconButtonDefaults.filledIconButtonColors(
@@ -249,19 +233,18 @@ fun AudioRecorder(
                         ) {
                             Icon(
                                 Icons.Default.Stop,
-                                contentDescription = "Zatrzymaj nagrywanie"
+                                contentDescription = stringResource(R.string.audio_recording_stop_recording)
                             )
                         }
                     }
 
                     if (hasRecording) {
-                        // Przyciski zapisz/odrzuć
                         IconButton(
                             onClick = { discardRecording() }
                         ) {
                             Icon(
                                 Icons.Default.Delete,
-                                contentDescription = "Odrzuć nagranie",
+                                contentDescription = stringResource(R.string.audio_recording_decline),
                                 tint = MaterialTheme.colorScheme.error
                             )
                         }
@@ -274,7 +257,7 @@ fun AudioRecorder(
                         ) {
                             Icon(
                                 Icons.Default.Check,
-                                contentDescription = "Zapisz nagranie",
+                                contentDescription = stringResource(R.string.audio_recording_save),
                                 tint = Color.White
                             )
                         }
@@ -284,7 +267,9 @@ fun AudioRecorder(
                 if (isRecording) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = if (isPaused) "Nagrywanie wstrzymane" else "Nagrywanie...",
+                        text = if (isPaused) stringResource(R.string.audo_recording_paused) else stringResource(
+                            R.string.audio_recording_in_progress
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = if (isPaused) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error
                     )

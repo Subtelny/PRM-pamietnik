@@ -3,20 +3,15 @@
     <cache-path
         name="my_cache"
         path="." />
-
     <files-path
         name="my_files"
-        path="images/" />
-
-    <external-path
-        name="my_external_files"
         path="." />
-
-    <external-files-path
-        name="my_app_external_files"
-        path="pictures/" />
 
     <external-cache-path
-        name="my_app_external_cache"
+        name="my_external_cache"
         path="." />
+
+    <cache-path name="cache" path="."/>
+
+    <files-path name="audio_files" path="audio/" />
 </paths>

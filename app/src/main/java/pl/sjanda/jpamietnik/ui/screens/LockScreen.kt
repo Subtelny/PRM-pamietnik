@@ -54,7 +54,7 @@ fun LockScreen(
     LaunchedEffect(uiState.unlocked) {
         if (uiState.unlocked) {
             onUnlocked()
-            lockScreenViewModel.consumeUnlockEvent() // Resetuj flagę po nawigacji
+            lockScreenViewModel.consumeUnlockEvent()
         }
     }
 
