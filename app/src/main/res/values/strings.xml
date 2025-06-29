@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">JPamietnik</string>
+    <string name="lock_screen_set_password_title">Ustaw Hasło</string>
+    <string name="lock_screen_enter_password_title">Wprowadź Hasło</string>
+    <string name="lock_screen_set_password_subtitle">To Twoje pierwsze uruchomienie lub hasło zostało zresetowane. Ustaw nowe hasło, aby zabezpieczyć pamiętnik.</string>
+    <string name="password_label">Hasło</string>
+    <string name="set_password_button">Ustaw Hasło</string>
+    <string name="unlock_button">Odblokuj</string>
+    <string name="error_password_incorrect">Nieprawidłowe hasło.</string>
+    <string name="error_password_too_short">Hasło musi mieć co najmniej 4 znaki.</string>
+</resources>
