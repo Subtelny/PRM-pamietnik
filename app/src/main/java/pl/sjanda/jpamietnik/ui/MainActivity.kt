@@ -10,18 +10,21 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.location.GeofencingClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.FirebaseApp
 import pl.sjanda.jpamietnik.ui.theme.JPamietnikTheme
-import pl.sjanda.jpamietnik.ui.screens.AppNavigation
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var geofencingClient: GeofencingClient
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this);
+        geofencingClient = LocationServices.getGeofencingClient(this)
         enableEdgeToEdge()
-
 
         setContent {
             JPamietnikTheme {
@@ -30,7 +33,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    AppNavigation(navController = navController)
+                    Navigation(navController)
                 }
             }
         }

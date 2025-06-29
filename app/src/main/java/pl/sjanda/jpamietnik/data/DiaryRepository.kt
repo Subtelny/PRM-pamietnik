@@ -1,8 +1,5 @@
 package pl.sjanda.jpamietnik.data
 
-import android.net.Uri
-import com.example.locationdiary.data.database.FirebaseManager
-import com.example.locationdiary.data.model.DiaryEntry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -34,11 +31,4 @@ class DiaryRepository {
         }
     }
 
-    suspend fun uploadImage(imageUri: Uri, entryId: String): Result<String> {
-        return firebaseManager.uploadImage(imageUri, entryId)
-    }
-
-    suspend fun uploadAudio(audioUri: Uri, entryId: String): Result<String> {
-        return firebaseManager.uploadAudio(audioUri, entryId)
-    }
 }
