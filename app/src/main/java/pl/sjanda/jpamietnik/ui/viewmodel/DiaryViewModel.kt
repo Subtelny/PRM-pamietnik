@@ -10,7 +10,7 @@ import pl.sjanda.jpamietnik.data.DiaryEntry
 import pl.sjanda.jpamietnik.data.DiaryRepository
 
 class DiaryViewModel : ViewModel() {
-    private val repository = DiaryRepository()
+    private val repository = DiaryRepository
 
     private val _entries = MutableStateFlow<List<DiaryEntry>>(emptyList())
     val entries: StateFlow<List<DiaryEntry>> = _entries.asStateFlow()
@@ -47,7 +47,7 @@ class DiaryViewModel : ViewModel() {
                 loadEntries()
                 onSuccess()
             } else {
-                onError(result.exceptionOrNull()?.message ?: "Błąd podczas zapisywania")
+                onError(result.exceptionOrNull()?.message ?: "Error during save")
             }
         }
     }
@@ -59,7 +59,7 @@ class DiaryViewModel : ViewModel() {
                 loadEntries()
                 onSuccess()
             } else {
-                onError(result.exceptionOrNull()?.message ?: "Błąd podczas aktualizacji")
+                onError(result.exceptionOrNull()?.message ?: "Error during update")
             }
         }
     }
@@ -71,7 +71,7 @@ class DiaryViewModel : ViewModel() {
                 loadEntries()
                 onSuccess()
             } else {
-                onError(result.exceptionOrNull()?.message ?: "Błąd podczas usuwania")
+                onError(result.exceptionOrNull()?.message ?: "Error during delete")
             }
         }
     }

@@ -1,15 +1,47 @@
 package pl.sjanda.jpamietnik.ui.component
 
-import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,11 +91,11 @@ fun ImageEditor(
             if (imageText.isNotEmpty()) {
                 val textPaint = Paint().apply {
                     color = Color.White.toArgb()
-                    textSize = mutableBitmap.width * 0.05f // 5% szerokości obrazu
+                    textSize = mutableBitmap.width * 0.05f
                     typeface = Typeface.DEFAULT_BOLD
                     isAntiAlias = true
                     style = Paint.Style.FILL
-                    setShadowLayer(4f, 2f, 2f, Color.Black.toArgb()) // Cień dla lepszej czytelności
+                    setShadowLayer(4f, 2f, 2f, Color.Black.toArgb())
                 }
 
                 val textBounds = Rect()
@@ -72,7 +104,7 @@ fun ImageEditor(
                 val textHeight = textBounds.height()
 
                 val x = (mutableBitmap.width - textWidth) / 2f
-                val y = mutableBitmap.height - textHeight - (mutableBitmap.height * 0.03f) // 3% margines od dołu
+                val y = mutableBitmap.height - textHeight - (mutableBitmap.height * 0.03f)
 
                 val backgroundPaint = Paint().apply {
                     color = Color.Black.copy(alpha = 0.6f).toArgb()
@@ -92,7 +124,8 @@ fun ImageEditor(
                 canvas.drawText(imageText, x, y, textPaint)
             }
 
-            val editedFile = File(context.cacheDir, "edited_image_${System.currentTimeMillis()}.jpg")
+            val editedFile =
+                File(context.cacheDir, "edited_image_${System.currentTimeMillis()}.jpg")
             val outputStream = FileOutputStream(editedFile)
             mutableBitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
             outputStream.close()
@@ -117,7 +150,7 @@ fun ImageEditor(
             Box {
                 AsyncImage(
                     model = imageUri,
-                    contentDescription = "Zdjęcie do edycji",
+                    contentDescription = "Image",
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(4f / 3f)
@@ -175,7 +208,11 @@ fun ImageEditor(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(if (imageText.isEmpty()) "Dodaj tekst" else "Edytuj tekst")
+                        Text(
+                            if (imageText.isEmpty()) stringResource(R.string.image_editor_add_text) else stringResource(
+                                R.string.image_editor_edit_text
+                            )
+                        )
                     }
 
                     if (imageText.isNotEmpty()) {
@@ -187,7 +224,7 @@ fun ImageEditor(
                         ) {
                             Icon(
                                 Icons.Default.Delete,
-                                contentDescription = "Usuń tekst",
+                                contentDescription = stringResource(R.string.image_editr_remove_text),
                                 modifier = Modifier.size(16.dp)
                             )
                         }
@@ -214,7 +251,7 @@ fun ImageEditor(
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Text("Zapisz")
+                            Text(stringResource(R.string.image_editor_save))
                         }
                     }
                 }
@@ -225,12 +262,12 @@ fun ImageEditor(
             AlertDialog(
                 onDismissRequest = { showTextDialog = false },
                 title = {
-                    Text(if (imageText.isEmpty()) "Dodaj tekst do zdjęcia" else "Edytuj tekst")
+                    Text(if (imageText.isEmpty()) stringResource(R.string.image_editor_add_text) else stringResource(R.string.image_editor_edit_text))
                 },
                 text = {
                     Column {
                         Text(
-                            text = "Tekst zostanie dodany na dole zdjęcia:",
+                            text = stringResource(R.string.image_editor_text_bottom_to_add),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -238,10 +275,10 @@ fun ImageEditor(
                         OutlinedTextField(
                             value = tempText,
                             onValueChange = { tempText = it },
-                            label = { Text("Wpisz tekst") },
+                            label = { Text(stringResource(R.string.image_editor_enter_text)) },
                             modifier = Modifier.fillMaxWidth(),
                             maxLines = 3,
-                            placeholder = { Text("Np. Wakacje 2024, Kraków") }
+                            placeholder = { Text(stringResource(R.string.image_editor_add_text_placeholder)) }
                         )
                     }
                 },
@@ -252,14 +289,14 @@ fun ImageEditor(
                             showTextDialog = false
                         }
                     ) {
-                        Text("OK")
+                        Text(stringResource(R.string.image_editor_ok))
                     }
                 },
                 dismissButton = {
                     TextButton(
                         onClick = { showTextDialog = false }
                     ) {
-                        Text("Anuluj")
+                        Text(stringResource(R.string.image_editor_cancel))
                     }
                 }
             )

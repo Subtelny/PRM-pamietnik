@@ -46,4 +46,25 @@
     <string name="entry_back">Wstecz</string>
     <string name="lokalizacja">Lokalizacja</string>
     <string name="location_get_loc">Pobierz lokalizację</string>
+    <string name="delete_entry_title">Usuwanie wpisu</string>
+    <string name="delete_entry_message">Czy aby na pewno chcesz usunąć ten wpis?</string>
+    <string name="delete_entry_confirm">Tak</string>
+    <string name="delete_entry_cancel">Anuluj</string>
+    <string name="entry_added_record">Dodano nagranie</string>
+    <string name="edit_entry_image">Zdjęcie</string>
+    <string name="edit_entry_record_again">Nagraj ponownie</string>
+    <string name="map_close">Zamknij</string>
+    <string name="map_check_entry">Zobacz wpis</string>
+    <string name="map_no_entries_with_loc">Brak wpisów z lokalizacją</string>
+    <string name="map_add_entries_with_loc">Dodaj lokalizację do swoich wpisów, aby zobaczyć je na mapie</string>
+    <string name="entry_detail_audio_preparing">Przygotowywanie audio...</string>
+    <string name="image_editor_add_text">Dodaj tekst</string>
+    <string name="image_editor_edit_text">Edytuj tekst</string>
+    <string name="image_editr_remove_text">Usuń tekst</string>
+    <string name="image_editor_save">Zapisz</string>
+    <string name="image_editor_text_bottom_to_add">Tekst zostanie dodany na dole zdjęcia:</string>
+    <string name="image_editor_add_text_placeholder">Np. Wakacje 2024, Kraków</string>
+    <string name="image_editor_enter_text">Wpisz tekst</string>
+    <string name="image_editor_cancel">Anuluj</string>
+    <string name="image_editor_ok">OK</string>
 </resources>

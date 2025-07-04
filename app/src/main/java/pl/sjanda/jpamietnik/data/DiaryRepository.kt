@@ -3,7 +3,7 @@ package pl.sjanda.jpamietnik.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class DiaryRepository {
+object DiaryRepository {
     private val firebaseManager = FirebaseManager()
 
     suspend fun createEntry(entry: DiaryEntry): Result<String> {

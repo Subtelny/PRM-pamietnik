@@ -4,18 +4,48 @@ import android.Manifest
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -27,7 +57,7 @@ import pl.sjanda.jpamietnik.ui.component.AudioRecorder
 import pl.sjanda.jpamietnik.ui.component.ImageEditor
 import pl.sjanda.jpamietnik.ui.viewmodel.DiaryViewModel
 import pl.sjanda.jpamietnik.util.LocationPicker
-import java.util.*
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -37,7 +67,6 @@ fun CreateEditEntryScreen(
     onCancel: () -> Unit,
     viewModel: DiaryViewModel = viewModel()
 ) {
-    val context = LocalContext.current
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
     var selectedLocation by remember { mutableStateOf<Location?>(null) }
@@ -62,6 +91,12 @@ fun CreateEditEntryScreen(
             title = entry.title
             content = entry.content
             selectedLocation = entry.location
+            entry.imageUrl?.let { imageUrl ->
+                selectedImageUri = imageUrl.toUri()
+            }
+            entry.audioUrl?.let { audioUrl ->
+                selectedAudioUri = audioUrl.toUri()
+            }
         }
     }
 
@@ -84,7 +119,7 @@ fun CreateEditEntryScreen(
                 navigationIcon = {
                     IconButton(onClick = onCancel) {
                         Icon(
-                            Icons.Default.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.entry_back)
                         )
                     }
@@ -164,7 +199,10 @@ fun CreateEditEntryScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Zdjęcie", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            stringResource(R.string.edit_entry_image),
+                            style = MaterialTheme.typography.titleMedium
+                        )
                         IconButton(
                             onClick = {
                                 if (cameraPermissionState.status.isGranted) {
@@ -198,18 +236,72 @@ fun CreateEditEntryScreen(
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(
-                        stringResource(R.string.entry_audio_record),
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            stringResource(R.string.entry_audio_record),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        if (selectedAudioUri != null) {
+                            IconButton(
+                                onClick = {
+                                    selectedAudioUri = null
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.Delete,
+                                    contentDescription = "Remove audio"
+                                )
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    AudioRecorder(
-                        onAudioRecorded = { audioUri ->
-                            selectedAudioUri = audioUri
-                        },
-                        permissionState = audioPermissionState
-                    )
+                    if (selectedAudioUri != null) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.PlayArrow,
+                                    contentDescription = "Audio recorded",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    stringResource(R.string.entry_added_record),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                TextButton(
+                                    onClick = {
+                                        selectedAudioUri = null
+                                    }
+                                ) {
+                                    Text(stringResource(R.string.edit_entry_record_again))
+                                }
+                            }
+                        }
+                    } else {
+                        AudioRecorder(
+                            onAudioRecorded = { audioUri ->
+                                selectedAudioUri = audioUri
+                            },
+                            permissionState = audioPermissionState
+                        )
+                    }
                 }
             }
 

@@ -1,4 +1,4 @@
-package pl.sjanda.jpamietnik.ui
+package pl.sjanda.jpamietnik
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,20 +10,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.location.GeofencingClient
-import com.google.android.gms.location.LocationServices
 import com.google.firebase.FirebaseApp
+import pl.sjanda.jpamietnik.ui.Navigation
 import pl.sjanda.jpamietnik.ui.theme.JPamietnikTheme
 
 class MainActivity : ComponentActivity() {
-
-    lateinit var geofencingClient: GeofencingClient
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this);
-        geofencingClient = LocationServices.getGeofencingClient(this)
         enableEdgeToEdge()
 
         setContent {

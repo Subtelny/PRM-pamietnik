@@ -10,7 +10,7 @@ import pl.sjanda.jpamietnik.data.DiaryEntry
 import pl.sjanda.jpamietnik.data.DiaryRepository
 
 class MapViewModel : ViewModel() {
-    private val repository = DiaryRepository()
+    private val repository = DiaryRepository
 
     private val _mapEntries = MutableStateFlow<List<DiaryEntry>>(emptyList())
     val mapEntries: StateFlow<List<DiaryEntry>> = _mapEntries.asStateFlow()

@@ -7,9 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import pl.sjanda.jpamietnik.ui.screens.CreateEditEntryScreen
 import pl.sjanda.jpamietnik.ui.screens.DiaryListScreen
+import pl.sjanda.jpamietnik.ui.screens.DiaryMapScreen
 import pl.sjanda.jpamietnik.ui.screens.EntryDetailScreen
 import pl.sjanda.jpamietnik.ui.screens.LockScreen
-import pl.sjanda.jpamietnik.ui.screens.MapScreen
 
 @Composable
 fun Navigation(
@@ -17,7 +17,7 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "diary_list"
+        startDestination = "lock"
     ) {
         composable("lock") {
             LockScreen(
@@ -63,9 +63,11 @@ fun Navigation(
         }
 
         composable("map") {
-            MapScreen(
-                onBack = { navController.popBackStack() },
-                onEntryClick = { entryId -> navController.navigate("entry_detail/$entryId") }
+            DiaryMapScreen(
+                onBackClick = { navController.popBackStack() },
+                onEntryClick = {
+                    entryId -> navController.navigate("entry_detail/$entryId")
+                }
             )
         }
     }

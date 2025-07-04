@@ -1,5 +1,6 @@
 package pl.sjanda.jpamietnik.ui.screens
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -21,13 +22,18 @@ fun DiaryEntryCard(
     entry: DiaryEntry,
     onClick: () -> Unit,
     onEdit: () -> Unit,
+    onLongPress: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
 
     Card(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongPress
+            )
     ) {
         Column(
             modifier = Modifier

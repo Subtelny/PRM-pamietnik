@@ -1,8 +1,8 @@
 package pl.sjanda.jpamietnik.ui.component
 
+import android.annotation.SuppressLint
 import android.media.MediaRecorder
 import android.net.Uri
-import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,7 +58,7 @@ fun AudioRecorder(
     val context = LocalContext.current
     var isRecording by remember { mutableStateOf(false) }
     var isPaused by remember { mutableStateOf(false) }
-    var recordingTime by remember { mutableStateOf(0L) }
+    var recordingTime by remember { mutableLongStateOf(0L) }
     var mediaRecorder by remember { mutableStateOf<MediaRecorder?>(null) }
     var outputFile by remember { mutableStateOf<File?>(null) }
     var hasRecording by remember { mutableStateOf(false) }
@@ -71,6 +72,7 @@ fun AudioRecorder(
         }
     }
 
+    @SuppressLint("DefaultLocale")
     fun formatTime(timeMs: Long): String {
         val seconds = (timeMs / 1000) % 60
         val minutes = (timeMs / (1000 * 60)) % 60
